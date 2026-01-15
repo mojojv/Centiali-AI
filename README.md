@@ -220,13 +220,7 @@ isort .
 Este proyecto es desarrollado para la **Alcaldía de Medellín** bajo principios de datos abiertos y gobierno abierto.
 
 ## 👥 Equipo
-
-- **Alcaldía de Medellín** - Secretaría de Movilidad
-- **Equipo de Desarrollo** - Data Engineering & Analytics
-
-## 📧 Contacto
-
-Para preguntas o soporte: [contacto@medellin.gov.co]
+camilo
 
 ---
 
