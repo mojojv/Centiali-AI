@@ -1,0 +1,110 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.hypothesis/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+*.env
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+data_storage/postgres_data/
+data_storage/duckdb_data/*.duckdb
+
+# Data files (raw data should be versioned separately)
+data_ingestion/raw/*.csv
+data_ingestion/raw/*.xlsx
+data_ingestion/raw/*.json
+data_ingestion/raw/*.geojson
+!data_ingestion/raw/.gitkeep
+
+# Processed data
+data_processing/staging/*
+!data_processing/staging/.gitkeep
+data_processing/analytics/*
+!data_processing/analytics/.gitkeep
+
+# Models
+models/trained_models/*.pkl
+models/trained_models/*.joblib
+models/trained_models/*.h5
+!models/trained_models/.gitkeep
+
+# MLflow
+mlruns/
+mlartifacts/
+
+# Logs
+*.log
+logs/
+*.log.*
+
+# Docker
+docker-compose.override.yml
+
+# Secrets
+secrets/
+*.pem
+*.key
+*.crt
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Documentation build
+docs/_build/
+site/

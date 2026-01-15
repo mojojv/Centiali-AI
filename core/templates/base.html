@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Centrally{% endblock %} - Analítica de Transporte</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: { primary: { 50: '#f0f9ff', 500: '#0ea5e9', 600: '#0284c7', 900: '#0c4a6e' } }
+                }
+            }
+        }
+    </script>
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans antialiased">
+    <div class="flex h-screen overflow-hidden">
+        <aside class="w-64 bg-slate-900 text-white flex flex-col shadow-xl z-20 hidden md:flex">
+            <div class="h-16 flex items-center px-6 border-b border-slate-800">
+                <i class="fas fa-traffic-light text-primary-500 text-2xl mr-3"></i>
+                <span class="text-xl font-bold tracking-tight">Centrally</span>
+            </div>
+            <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+                <a href="/" class="flex items-center px-3 py-2.5 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors group">
+                    <i class="fas fa-home w-6 text-center mr-2"></i> <span class="font-medium">Dashboard</span>
+                </a>
+                <a href="/mapas" class="flex items-center px-3 py-2.5 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors group">
+                    <i class="fas fa-map-marked-alt w-6 text-center mr-2"></i> <span class="font-medium">Mapas</span>
+                </a>
+                <a href="/analytics" class="flex items-center px-3 py-2.5 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors group">
+                    <i class="fas fa-chart-line w-6 text-center mr-2"></i> <span class="font-medium">Analítica</span>
+                </a>
+            </nav>
+        </aside>
+        <div class="flex-1 flex flex-col h-screen overflow-hidden">
+            <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 shadow-sm z-10">
+                <div class="md:hidden"><i class="fas fa-bars"></i></div>
+                <div class="flex items-center ml-auto space-x-4">
+                    <span class="text-sm font-medium text-gray-500">Admin</span>
+                </div>
+            </header>
+            <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-6">
+                <div class="max-w-7xl mx-auto">{% block content %}{% endblock %}</div>
+            </main>
+        </div>
+    </div>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

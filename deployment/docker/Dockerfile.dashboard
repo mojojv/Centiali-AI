@@ -1,0 +1,41 @@
+# =====================================
+# Centrally - Dockerfile para Dashboard
+# =====================================
+
+FROM python:3.10-slim
+
+LABEL maintainer="Centrally Team <centrally@medellin.gov.co>"
+LABEL description="Centrally Dashboard - Dash Application"
+
+# Variables de entorno
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1
+
+# Directorio de trabajo
+WORKDIR /app
+
+# Instalar dependencias del sistema
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copiar requirements
+COPY requirements.txt .
+
+# Instalar dependencias Python
+RUN pip install --upgrade pip && \
+    pip install -r requirements.txt
+
+# Copiar código de la aplicación
+COPY dashboard/ ./dashboard/
+COPY data_processing/ ./data_processing/
+COPY models/ ./models/
+COPY .env.example .env
+
+# Exponer puerto
+EXPOSE 8050
+
+# Comando de inicio
+CMD ["python", "dashboard/app.py"]

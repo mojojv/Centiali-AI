@@ -1,0 +1,196 @@
+{% extends 'base.html' %}
+
+{% block title %}Analítica Avanzada{% endblock %}
+
+{% block content %}
+<div class="mb-6 flex justify-between items-end">
+    <div>
+        <h1 class="text-2xl font-bold text-gray-900">Tablero de Control</h1>
+        <p class="text-sm text-gray-500">Análisis detallado de incidentes viales.</p>
+    </div>
+    <div class="bg-white p-1 rounded-lg border border-gray-200 flex">
+        <button class="px-3 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded-md">30 Días</button>
+        <button class="px-3 py-1 text-xs font-medium text-gray-500 hover:text-gray-900">6 Meses</button>
+        <button class="px-3 py-1 text-xs font-medium text-gray-500 hover:text-gray-900">Año</button>
+    </div>
+</div>
+
+{% if error %}
+<div class="bg-red-50 text-red-700 p-4 rounded-lg border border-red-200">
+    <i class="fas fa-exclamation-circle mr-2"></i> Error cargando datos: {{ error }}
+</div>
+{% else %}
+
+<!-- KPI Cards -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <div class="flex justify-between items-start">
+            <div>
+                <p class="text-xs font-bold text-gray-400 uppercase">Total Incidentes</p>
+                <h3 class="text-3xl font-bold text-gray-800 mt-2">{{ total_incidentes }}</h3>
+            </div>
+            <div class="p-2 bg-blue-50 text-blue-600 rounded-lg">
+                <i class="fas fa-car-crash text-xl"></i>
+            </div>
+        </div>
+        <div class="mt-4 flex items-center text-xs">
+            <span class="text-green-600 font-bold bg-green-50 px-1.5 py-0.5 rounded mr-2"><i
+                    class="fas fa-arrow-up"></i> 12%</span>
+            <span class="text-gray-400">vs mes anterior</span>
+        </div>
+    </div>
+
+    <!-- Placeholder KPIs -->
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <p class="text-xs font-bold text-gray-400 uppercase">Tasa de Mortalidad</p>
+        <h3 class="text-3xl font-bold text-gray-800 mt-2">1.2%</h3>
+        <div class="w-full bg-gray-100 rounded-full h-1.5 mt-4">
+            <div class="bg-red-500 h-1.5 rounded-full" style="width: 15%"></div>
+        </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <p class="text-xs font-bold text-gray-400 uppercase">Hora Pico</p>
+        <h3 class="text-3xl font-bold text-gray-800 mt-2">18:00</h3>
+        <p class="text-xs text-gray-400 mt-4">Mayor frecuencia de choques</p>
+    </div>
+
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <p class="text-xs font-bold text-gray-400 uppercase">Comuna Crítica</p>
+        <h3 class="text-2xl font-bold text-gray-800 mt-2 truncate">La Candelaria</h3>
+        <p class="text-xs text-red-500 mt-4 font-medium">Zona de alto riesgo</p>
+    </div>
+</div>
+
+<!-- Charts Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+
+    <!-- Main Trend Chart -->
+    <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <h4 class="font-bold text-gray-800 mb-4">Tendencia de Incidentes</h4>
+        <div id="trendChart" class="h-80"></div>
+    </div>
+
+    <!-- Severity Donut -->
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <h4 class="font-bold text-gray-800 mb-4">Gravedad</h4>
+        <div id="severityChart" class="h-80 flex items-center justify-center"></div>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 gap-6">
+    <!-- Type Bar Chart -->
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <h4 class="font-bold text-gray-800 mb-4">Top 10 Tipos de Incidente</h4>
+        <div id="typeChart" class="h-80"></div>
+    </div>
+</div>
+
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Data from Django
+    const chartData = {
+        gravedad: {{ chart_gravedad| safe }},
+    tipo: { { chart_tipo | safe } },
+    tendencia: { { chart_tendencia | safe } }
+    };
+
+    // 1. Trend Line Chart
+    const trendOptions = {
+        series: [{
+            name: "Incidentes",
+            data: chartData.tendencia.series
+        }],
+        chart: {
+            type: 'area',
+            height: 320,
+            toolbar: { show: false },
+            fontFamily: 'Inter, sans-serif'
+        },
+        dataLabels: { enabled: false },
+        stroke: { curve: 'smooth', width: 2 },
+        xaxis: {
+            categories: chartData.tendencia.labels,
+            axisBorder: { show: false },
+            axisTicks: { show: false }
+        },
+        fill: {
+            type: "gradient",
+            gradient: {
+                shadeIntensity: 1,
+                opacityFrom: 0.7,
+                opacityTo: 0.2,
+                stops: [0, 90, 100]
+            }
+        },
+        colors: ['#0ea5e9'],
+        grid: {
+            borderColor: '#f1f5f9',
+            strokeDashArray: 4,
+        }
+    };
+    new ApexCharts(document.querySelector("#trendChart"), trendOptions).render();
+
+    // 2. Severity Donut Chart
+    const severityOptions = {
+        series: chartData.gravedad.series,
+        labels: chartData.gravedad.labels,
+        chart: {
+            type: 'donut',
+            height: 320,
+            fontFamily: 'Inter, sans-serif'
+        },
+        colors: ['#3b82f6', '#f59e0b', '#ef4444', '#10b981'],
+        plotOptions: {
+            pie: {
+                donut: {
+                    size: '70%',
+                    labels: {
+                        show: true,
+                        total: {
+                            show: true,
+                            label: 'Total',
+                            formatter: function (w) {
+                                return w.globals.seriesTotals.reduce((a, b) => a + b, 0)
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        legend: { position: 'bottom' }
+    };
+    new ApexCharts(document.querySelector("#severityChart"), severityOptions).render();
+
+    // 3. Types Bar Chart
+    const typeOptions = {
+        series: [{
+            name: 'Cantidad',
+            data: chartData.tipo.series
+        }],
+        chart: {
+            type: 'bar',
+            height: 300,
+            toolbar: { show: false },
+            fontFamily: 'Inter, sans-serif'
+        },
+        plotOptions: {
+            bar: {
+                borderRadius: 4,
+                horizontal: true,
+                barHeight: '60%'
+            }
+        },
+        dataLabels: { enabled: false },
+        xaxis: {
+            categories: chartData.tipo.labels,
+        },
+        colors: ['#6366f1']
+    };
+    new ApexCharts(document.querySelector("#typeChart"), typeOptions).render();
+
+</script>
+{% endblock %}
